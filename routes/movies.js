@@ -7,7 +7,7 @@ const {
 
 // Импорт валидаторов запросов
 const {
-  createCardValidator, deleteCardValidator,
+  createMovieValidator, deleteMovieValidator,
 } = require('../validators/movie_validator');
 
 // Возвращает все сохранённые текущим пользователем фильмы
@@ -15,9 +15,9 @@ router.get('/movies', getMovies);
 
 // Создаёт фильм с переданными в теле country, director, duration, year, description,
 // image, trailer, nameRU, nameEN и thumbnail, movieId
-router.post('/movies', createCardValidator, createMovie);
+router.post('/movies', createMovieValidator, createMovie);
 
 // Удаляет сохранённый фильм по id
-router.delete('/movies/_id', deleteCardValidator, deleteMovie);
+router.delete('/movies/_id', deleteMovieValidator, deleteMovie);
 
 module.exports = router;

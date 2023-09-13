@@ -11,26 +11,6 @@ const utils = require('../utils/utils');
 
 const User = require('../models/user');
 
-// module.exports.getUsers = (req, res, next) => {
-//   User.find({})
-//     .then((users) => {
-//       res.send({ data: users });
-//     })
-//     .catch(next);
-// };
-
-// module.exports.getUserById = (req, res, next) => {
-//   const { userId } = req.params;
-//   User.findById(userId)
-//     .then((user) => {
-//       if (!user) {
-//         throw new utils.NotFoundError('Пользователь не найден.');
-//       }
-//       res.send(user);
-//     })
-//     .catch(next);
-// };
-
 module.exports.createUser = (req, res, next) => {
   const {
     name, email, password,
@@ -49,22 +29,9 @@ module.exports.createUser = (req, res, next) => {
       if (err.code === 11000) {
         next(new utils.ExistsEmailError('Пользователь с таким email  уже существует.'));
       }
+      console.log('createUser', err);
       next();
     });
-};
-
-/// /// ///
-module.exports.updateUser = (req, res, next) => {
-  const userId = req.user._id;
-  const { email, name } = req.body;
-  User.findByIdAndUpdate(userId, { email, name }, { new: true, runValidators: true })
-    .then((user) => {
-      if (!user) {
-        throw new utils.NotFoundError('Пользователь не найден.');
-      }
-      res.send(user);
-    })
-    .catch(next);
 };
 
 /// /// ///
@@ -108,6 +75,20 @@ module.exports.signOut = (req, res, next) => {
 module.exports.getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
   User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        throw new utils.NotFoundError('Пользователь не найден.');
+      }
+      res.send(user);
+    })
+    .catch(next);
+};
+
+/// /// ///
+module.exports.updateUser = (req, res, next) => {
+  const userId = req.user._id;
+  const { email, name } = req.body;
+  User.findByIdAndUpdate(userId, { email, name }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         throw new utils.NotFoundError('Пользователь не найден.');

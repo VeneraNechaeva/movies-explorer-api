@@ -34,7 +34,7 @@ const movieSchema = new mongoose.Schema({
   },
   trailerLink: {
     type: String,
-    required: [true, 'Поле "image" должно быть заполнено'],
+    required: [true, 'Поле "trailerLink" должно быть заполнено'],
     validate: {
       validator(v) {
         return /https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=%]+$/gi.test(v);
@@ -44,7 +44,7 @@ const movieSchema = new mongoose.Schema({
   },
   thumbnail: {
     type: String,
-    required: [true, 'Поле "image" должно быть заполнено'],
+    required: [true, 'Поле "thumbnail" должно быть заполнено'],
     validate: {
       validator(v) {
         return /https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=%]+$/gi.test(v);
