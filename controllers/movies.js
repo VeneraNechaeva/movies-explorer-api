@@ -14,7 +14,7 @@ module.exports.getMovies = (req, res, next) => {
 
 module.exports.createMovie = (req, res, next) => {
   const {
-    country, director, duration, year, description, image, trailer,
+    country, director, duration, year, description, image, trailerLink,
     nameRU, nameEN, thumbnail, movieId,
   } = req.body;
   const owner = req.user._id;
@@ -25,7 +25,7 @@ module.exports.createMovie = (req, res, next) => {
     year,
     description,
     image,
-    trailer,
+    trailerLink,
     nameRU,
     nameEN,
     thumbnail,
@@ -37,10 +37,10 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  const { movieId } = req.params;
+  const { _id } = req.params;
   const userId = req.user._id;
 
-  Movie.findById(movieId)
+  Movie.findById(_id)
     // eslint-disable-next-line consistent-return
     .then((movie) => {
       if (!movie) {
