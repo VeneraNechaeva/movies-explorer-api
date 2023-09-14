@@ -7,7 +7,11 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 // Импортируем модуль jsonwebtoken для создания токенов
 const jwt = require('jsonwebtoken');
 
-const utils = require('../utils/utils');
+// Импорт ошибок
+const { CREATE_SUCCESS } = require('../utils/errors/codes');
+const { ExistsEmailError } = require('../utils/errors/exists-email-error');
+const { IncorrectAuthorizationError } = require('../utils/errors/incorrect-authorization-error');
+const { NotFoundError } = require('../utils/errors/not-found-error');
 
 const User = require('../models/user');
 
@@ -21,13 +25,12 @@ module.exports.createUser = (req, res, next) => {
       name, email, password: hash, // записываем хеш в базу
     }))
     .then((user) => {
-      // eslint-disable-next-line no-param-reassign
-      user.password = undefined;
-      res.status(utils.CREATE_SUCCESS).send({ data: user });
+      const userNoPassword = { ...user.toObject(), ...{ password: undefined } };
+      res.status(CREATE_SUCCESS).send({ data: userNoPassword });
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new utils.ExistsEmailError('Пользователь с таким email  уже существует.'));
+        next(new ExistsEmailError('Пользователь с таким email  уже существует.'));
       }
       console.log('createUser', err);
       next();
@@ -41,7 +44,7 @@ module.exports.login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then((user) => {
       if (!user) {
-        throw new utils.IncorrectAuthorizationError('Передан неверный логин или пароль.');
+        throw new IncorrectAuthorizationError('Передан неверный логин или пароль.');
       }
       // создадим токен
       const token = jwt.sign(
@@ -77,7 +80,8 @@ module.exports.getCurrentUser = (req, res, next) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        throw new utils.NotFoundError('Пользователь не найден.');
+        // throw new utils.NotFoundError('Пользователь не найден.');
+        throw new NotFoundError('Пользователь не найден.');
       }
       res.send(user);
     })
@@ -91,7 +95,7 @@ module.exports.updateUser = (req, res, next) => {
   User.findByIdAndUpdate(userId, { email, name }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        throw new utils.NotFoundError('Пользователь не найден.');
+        throw new NotFoundError('Пользователь не найден.');
       }
       res.send(user);
     })

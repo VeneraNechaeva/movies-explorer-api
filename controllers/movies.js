@@ -1,4 +1,6 @@
-const utils = require('../utils/utils');
+const { CREATE_SUCCESS } = require('../utils/errors/codes');
+const { NotFoundError } = require('../utils/errors/not-found-error');
+const { DeleteCardError } = require('../utils/errors/delete-card-error');
 
 const Movie = require('../models/movie');
 
@@ -32,7 +34,7 @@ module.exports.createMovie = (req, res, next) => {
     movieId,
     owner,
   })
-    .then((movie) => res.status(utils.CREATE_SUCCESS).send({ data: movie }))
+    .then((movie) => res.status(CREATE_SUCCESS).send({ data: movie }))
     .catch(next);
 };
 
@@ -41,17 +43,16 @@ module.exports.deleteMovie = (req, res, next) => {
   const userId = req.user._id;
 
   Movie.findById(_id)
-    // eslint-disable-next-line consistent-return
     .then((movie) => {
       if (!movie) {
-        throw new utils.NotFoundError('Фильм не найден.');
+        throw new NotFoundError('Фильм не найден.');
       }
       if (movie.owner.toString() === userId) {
         Movie.deleteOne(movie)
           .then((movieAfterDel) => res.send(movieAfterDel))
           .catch((err) => Promise.reject(err));
       } else {
-        return Promise.reject(new utils.DeleteCardError('Нельзя удалять чужие карточки с фильмом!'));
+        next(new DeleteCardError('Нельзя удалять чужие карточки с фильмом!'));
       }
     })
     .catch(next);

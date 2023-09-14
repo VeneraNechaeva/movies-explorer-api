@@ -8,7 +8,6 @@ const allowedCors = [
   'http://localhost:3000/',
 ];
 
-// eslint-disable-next-line consistent-return
 const corsCheck = (req, res, next) => {
   const { origin } = req.headers; // Сохраняем источник запроса в переменную origin
   // проверяем, что источник запроса есть среди разрешённых
@@ -29,7 +28,7 @@ const corsCheck = (req, res, next) => {
     res.header('Access-Control-Allow-Methods', 'GET, HEAD, PATCH, OPTIONS, POST, PUT, DELETE');
 
     // завершаем обработку запроса и возвращаем результат клиенту
-    return res.end();
+    res.end();
   }
   next();
 };

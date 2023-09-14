@@ -32,11 +32,9 @@ const userSchema = new mongoose.Schema({
 }, { versionKey: false });
 
 // Добавим собственный метод findUserByCredentials схеме пользователя
-// eslint-disable-next-line func-names
-userSchema.statics.findUserByCredentials = function (email, password) {
+function findUserByCredentials(email, password) {
   // проверяем есть ли пользователь в базе с указанной почтой
   return this.findOne({ email }).select('+password') // this — это модель User
-    // eslint-disable-next-line consistent-return
     .then((user) => {
       // пользователь не найден — отклоняем промис
       // с ошибкой и переходим в блок catch
@@ -54,7 +52,9 @@ userSchema.statics.findUserByCredentials = function (email, password) {
           return user;
         });
     });
-};
+}
+
+userSchema.statics.findUserByCredentials = findUserByCredentials;
 
 // Создаём модель и экспортируем её
 module.exports = mongoose.model('user', userSchema);
