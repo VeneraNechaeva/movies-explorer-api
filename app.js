@@ -31,18 +31,9 @@ const { errorHandler } = require('./middlewares/error-handler');
 // Импорт CORS
 const { corsCheck } = require('./middlewares/cors-check');
 
-const { createUser, login, signOut } = require('./controllers/users');
-const auth = require('./middlewares/auth');
-
 const utils = require('./utils/utils');
 
-// Импорт валидаторов запросов
-const { loginValidator, createUserValidator } = require('./validators/user_validator');
-
-// Импортируем роуты
-const routerUser = require('./routes/users');
-const routerMovie = require('./routes/movies');
-
+const router = require('./routes/index');
 // Слушаем 3000 порт
 const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/bitfilmsdb' } = process.env;
 // Cоздание приложения методом express
@@ -61,17 +52,7 @@ app.use(requestLogger); // подключаем логгер запросов, �
 
 app.use(limiter); // применяем limiter для ограничения скорости ко всем запросам
 
-// Роуты для логина и регистрации
-app.post('/signin', loginValidator, login);
-app.post('/signup', createUserValidator, createUser);
-
-// Авторизация (Защищаем роуты авторизацией)
-app.use(auth);
-
-app.post('/signout', signOut);
-
-app.use('/', routerUser); // запускаем
-app.use('/', routerMovie); // запускаем
+app.use(router);
 
 app.use(utils.checkIncorrectPath); // запускаем обработку неправильного пути
 
