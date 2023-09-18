@@ -65,7 +65,7 @@ app.use(errors());
 app.use(errorHandler);
 
 // Подключаемся к серверу mongo
-mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', {
+mongoose.connect(DB_URL, {
   useNewUrlParser: true,
 });
 

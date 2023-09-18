@@ -16,16 +16,9 @@ module.exports.loginValidator = celebrate({
   }),
 });
 
-module.exports.getCurrentUserValidator = celebrate({
-  body: Joi.object().keys({
-    _id: Joi.string().length(24).hex().required(),
-  }),
-});
-
 module.exports.updateUserValidator = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     email: Joi.string().required().email(),
-    user: Joi.object().keys({ _id: Joi.string().length(24).hex().required() }),
   }),
 });

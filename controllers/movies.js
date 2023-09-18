@@ -1,6 +1,7 @@
 const { CREATE_SUCCESS } = require('../utils/errors/codes');
 const { NotFoundError } = require('../utils/errors/not-found-error');
 const { DeleteCardError } = require('../utils/errors/delete-card-error');
+const { MSG_MOVIE_NOT_FOUND, MSG_MOVIE_DELETE_CARD } = require('../utils/errors/codes');
 
 const Movie = require('../models/movie');
 
@@ -45,14 +46,14 @@ module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(_id)
     .then((movie) => {
       if (!movie) {
-        throw new NotFoundError('Фильм не найден.');
+        throw new NotFoundError(MSG_MOVIE_NOT_FOUND);
       }
       if (movie.owner.toString() === userId) {
         Movie.deleteOne(movie)
           .then((movieAfterDel) => res.send(movieAfterDel))
           .catch((err) => Promise.reject(err));
       } else {
-        next(new DeleteCardError('Нельзя удалять чужие карточки с фильмом!'));
+        next(new DeleteCardError(MSG_MOVIE_DELETE_CARD));
       }
     })
     .catch(next);

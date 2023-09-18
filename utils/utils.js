@@ -1,8 +1,9 @@
 const { NotFoundError } = require('./errors/not-found-error');
+const { MSG_NOT_FOUND } = require('./errors/codes');
 
 // Обработка неправильного пути
 const checkIncorrectPath = (req, res, next) => {
-  next(new NotFoundError('Страница не найдена!'));
+  next(new NotFoundError(MSG_NOT_FOUND));
 };
 
 // Регулярное выражение для валидации ссылки

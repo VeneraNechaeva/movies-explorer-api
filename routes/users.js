@@ -6,13 +6,10 @@ const {
 } = require('../controllers/users');
 
 // Импорт валидаторов запросов
-const {
-  getCurrentUserValidator,
-  updateUserValidator,
-} = require('../validators/user_validator');
+const { updateUserValidator } = require('../validators/user_validator');
 
 // Bозвращает информацию о пользователе (email и имя)
-router.get('/users/me', getCurrentUserValidator, getCurrentUser);
+router.get('/users/me', getCurrentUser);
 
 // Обновляет информацию о пользователе (email и имя)
 router.patch('/users/me', updateUserValidator, updateUser);

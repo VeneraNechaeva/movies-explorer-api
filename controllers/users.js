@@ -12,6 +12,7 @@ const { CREATE_SUCCESS } = require('../utils/errors/codes');
 const { ExistsEmailError } = require('../utils/errors/exists-email-error');
 const { IncorrectAuthorizationError } = require('../utils/errors/incorrect-authorization-error');
 const { NotFoundError } = require('../utils/errors/not-found-error');
+const { MSG_USER_EXISTS_EMAI, MSG_INCORRECT_LOGIN_OR_PASSWORD, MSG_USER_NOT_FOUND } = require('../utils/errors/codes');
 
 const User = require('../models/user');
 
@@ -30,10 +31,9 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ExistsEmailError('Пользователь с таким email  уже существует.'));
+        next(new ExistsEmailError(MSG_USER_EXISTS_EMAI));
       }
-      console.log('createUser', err);
-      next();
+      next(err);
     });
 };
 
@@ -44,7 +44,7 @@ module.exports.login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then((user) => {
       if (!user) {
-        throw new IncorrectAuthorizationError('Передан неверный логин или пароль.');
+        throw new IncorrectAuthorizationError(MSG_INCORRECT_LOGIN_OR_PASSWORD);
       }
       // создадим токен
       const token = jwt.sign(
@@ -80,8 +80,7 @@ module.exports.getCurrentUser = (req, res, next) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        // throw new utils.NotFoundError('Пользователь не найден.');
-        throw new NotFoundError('Пользователь не найден.');
+        throw new NotFoundError(MSG_USER_NOT_FOUND);
       }
       res.send(user);
     })
@@ -95,9 +94,14 @@ module.exports.updateUser = (req, res, next) => {
   User.findByIdAndUpdate(userId, { email, name }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь не найден.');
+        throw new NotFoundError(MSG_USER_NOT_FOUND);
       }
       res.send(user);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new ExistsEmailError(MSG_USER_EXISTS_EMAI));
+      }
+      next(err);
+    });
 };
