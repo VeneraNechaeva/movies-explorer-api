@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');
 const validator = require('validator');
 
 const { IncorrectAuthorizationError } = require('../utils/errors/incorrect-authorization-error');
+const { MSG_INCORRECT_LOGIN_OR_PASSWORD } = require('../utils/errors/codes');
 
 // Создаём схему
 const userSchema = new mongoose.Schema({
@@ -39,7 +40,7 @@ function findUserByCredentials(email, password) {
       // пользователь не найден — отклоняем промис
       // с ошибкой и переходим в блок catch
       if (!user) {
-        return Promise.reject(new IncorrectAuthorizationError('Неправильные почта или пароль'));
+        return Promise.reject(new IncorrectAuthorizationError(MSG_INCORRECT_LOGIN_OR_PASSWORD));
       }
 
       // нашёлся — сравниваем хеши
@@ -47,7 +48,7 @@ function findUserByCredentials(email, password) {
         .then((matched) => {
           if (!matched) {
             // хеши не совпали — отклоняем промис
-            return Promise.reject(new IncorrectAuthorizationError('Неправильные почта или пароль'));
+            return Promise.reject(new IncorrectAuthorizationError(MSG_INCORRECT_LOGIN_OR_PASSWORD));
           }
           return user;
         });

@@ -10,7 +10,7 @@ const ERROR_EXISTS_EMAIL = 409;
 // Сообщения ответов
 const MSG_ERROR_DEFAULT = 'На сервере произошла ошибка.';
 const MSG_NOT_FOUND = 'Страница не найдена!';
-const MSG_INCORRECT_LOGIN_OR_PASSWORD = 'Передан неверный логин или пароль.';
+const MSG_INCORRECT_LOGIN_OR_PASSWORD = 'Передана неверная почта или пароль.';
 
 const MSG_USER_AUTOHORIZATION = 'Необходима авторизация.';
 const MSG_USER_NOT_FOUND = 'Пользователь не найден.';
