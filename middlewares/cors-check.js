@@ -1,5 +1,7 @@
 // Массив доменов, с которых разрешены кросс-доменные запросы
 const allowedCors = [
+  'https://movies.nechaeva.nomoredomainsrocks.ru',
+  'http://movies.nechaeva.nomoredomainsrocks.ru',
   'https://movies.nechaeva.nomoredomainsrocks.ru/',
   'http://movies.nechaeva.nomoredomainsrocks.ru/',
   'http://localhost:3000',
