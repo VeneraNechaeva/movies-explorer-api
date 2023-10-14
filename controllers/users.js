@@ -68,7 +68,10 @@ module.exports.login = (req, res, next) => {
 // Создаём контроллер удаления jwt из куков
 module.exports.signOut = (req, res, next) => {
   try {
-    res.clearCookie('jwt')
+    res.clearCookie('jwt', {
+      sameSite: 'None',
+      secure: true,
+    })
       .send({});
   } catch (err) {
     next(err);
